@@ -1,24 +1,38 @@
 package main
 
+const (
+	ticks = 15
+	width = 10
+	height = 10
+)
+
 type Universe interface {
+	Status() Grid
 	Tick()
-	Snapshot() [][]bool
 }
 
 type Animator interface {
-	AddFrame([][]bool)
-	Animate()
+	Add(Grid)
+	Animate(file string)
 }
 
-const ticks = 10
+type Grid interface {
+	Width() int
+	Height() int
+	Get(x, y int) (bool, error)
+	Set(x, y int, v bool) error
+}
 
 func main() {
-	var u Universe
-	var a Animator
+	u := ConwayUniverse{}
+	a := GifAnimator{}
+
 	for i:=0; i<ticks; i++ {
-		current := u.Snapshot()
-		a.AddFrame(current)
-		u.Tick()
+		s := u.pic()
+		a.add(s)
+		u.tick()
 	}
-	a.Animate()
+
+	a.animate("conway.gif")
 }
+
