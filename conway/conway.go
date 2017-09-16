@@ -10,7 +10,7 @@ type Animator interface {
 	Animate(file string)
 }
 
-// A grid represents a snapshot of a universe.
+// Grid represents a snapshot of a universe.
 type Grid interface {
 	// Width returns the width of the universe (number of cells).
 	Width() int

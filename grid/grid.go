@@ -2,7 +2,7 @@ package grid
 
 import "fmt"
 
-// A grid represents a snapshot of a universe.
+// Grid represents a snapshot of a universe.
 // The zero value of this type is not safe, use the function New below.
 // The minimum width and height for a universe is 3 cells each.
 type Grid struct {
