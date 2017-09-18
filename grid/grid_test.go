@@ -19,7 +19,7 @@ func TestSizeOK(t *testing.T) {
 
 func testSizeOK(t *testing.T, width, height int) {
 	t.Helper()
-	g, err := grid.New(width, height)
+	g, err := grid.New(width, height, nil)
 	if err != nil {
 		t.Fatalf("cannot create grid: %v", err)
 	}
@@ -44,7 +44,7 @@ func TestSizeError(t *testing.T) {
 
 func testSizeError(t *testing.T, width, height int) {
 	t.Helper()
-	_, err := grid.New(width, height)
+	_, err := grid.New(width, height, nil)
 	if err == nil {
 		t.Errorf("new grid was supposed to fail and it did not")
 	}
