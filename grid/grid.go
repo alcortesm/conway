@@ -71,16 +71,9 @@ func (g *Grid) Height() int {
 	return g.height
 }
 
-// Get returns if the cell at coordinates x, y is alive.  Returns
+// IsAlive returns if the cell at coordinates c is alive.  Returns
 // an error if x or y are out of bounds.
 // Implements conway.Grid.
-func (g *Grid) Get(x, y int) (bool, error) {
+func (g *Grid) IsAlive(c conway.Coord) (bool, error) {
 	return false, fmt.Errorf("TODO")
-}
-
-// Set sets the cell at coordinates x, y to value v (true for alive,
-// false for dead).  Returns an error if x or y are out of bounds.
-// Implements conway.Grid.
-func (g *Grid) Set(x, y int, v bool) error {
-	return fmt.Errorf("TODO")
 }
