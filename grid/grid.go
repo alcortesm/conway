@@ -10,7 +10,7 @@ import (
 // The zero value of this type is not safe, use the function New below.
 // The minimum width and height for a universe is 3 cells each.
 type Grid struct {
-	width, height int
+	width, height uint
 	cells         []bool // true means alive
 }
 
@@ -23,7 +23,7 @@ const (
 // and the given list of alive cells.
 // Returns an error if the width or the height is smaller than 3 or if any
 // of the alive cells are out of bounds.
-func New(width, height int, alives []conway.Coord) (*Grid, error) {
+func New(width, height uint, alives []conway.Coord) (*Grid, error) {
 	if width < minWidth {
 		return nil, fmt.Errorf("width must be >= than %d, was %d",
 			minWidth, width)
@@ -56,18 +56,18 @@ func (g *Grid) pos(c conway.Coord) (int, error) {
 		return 0, fmt.Errorf("ordinate value too high (%d) for grid (height = %d)",
 			c.Y(), g.Height())
 	}
-	return c.Y()*g.Width() + c.X(), nil
+	return int(c.Y()*g.Width() + c.X()), nil
 }
 
 // Width returns the width of the universe (number of cells).
 // Implements conway.Grid.
-func (g *Grid) Width() int {
+func (g *Grid) Width() uint {
 	return g.width
 }
 
 // Height returns the height of the universe (number of cells).
 // Implements conway.Grid.
-func (g *Grid) Height() int {
+func (g *Grid) Height() uint {
 	return g.height
 }
 

@@ -17,7 +17,7 @@ func TestSizeOK(t *testing.T) {
 	testSizeOK(t, 10000, 20000)
 }
 
-func testSizeOK(t *testing.T, width, height int) {
+func testSizeOK(t *testing.T, width, height uint) {
 	t.Helper()
 	g, err := grid.New(width, height, nil)
 	if err != nil {
@@ -36,13 +36,9 @@ func TestSizeError(t *testing.T) {
 	testSizeError(t, 3, 2)
 	testSizeError(t, 2, 2)
 	testSizeError(t, 0, 0)
-	testSizeError(t, -6, 3)
-	testSizeError(t, 3, -6)
-	testSizeError(t, 10000, -2)
-	testSizeError(t, -2, 10000)
 }
 
-func testSizeError(t *testing.T, width, height int) {
+func testSizeError(t *testing.T, width, height uint) {
 	t.Helper()
 	_, err := grid.New(width, height, nil)
 	if err == nil {
