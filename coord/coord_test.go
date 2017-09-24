@@ -19,7 +19,7 @@ func Test(t *testing.T) {
 		{x: 300, y: 12},
 	} {
 		name := fmt.Sprintf("(%d,%d)", f.x, f.y)
-		t.Run(name, func(*testing.T) {
+		t.Run(name, func(t *testing.T) {
 			c := coord.New(f.x, f.y)
 			conway.TestCoord(t, c, f.x, f.y)
 		})
