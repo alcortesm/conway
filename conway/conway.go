@@ -28,3 +28,7 @@ type Coord interface {
 	// Y returns the cell's ordinate.
 	Y() uint
 }
+
+func CoordEqual(a, b Coord) bool {
+	return a.X() == b.X() && a.Y() == b.Y()
+}
