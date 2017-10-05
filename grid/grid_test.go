@@ -3,6 +3,8 @@ package grid_test
 import (
 	"testing"
 
+	"github.com/alcortesm/conway/conway"
+	"github.com/alcortesm/conway/coord"
 	"github.com/alcortesm/conway/grid"
 )
 
@@ -43,5 +45,23 @@ func testSizeError(t *testing.T, width, height uint) {
 	_, err := grid.New(width, height, nil)
 	if err == nil {
 		t.Errorf("new grid was supposed to fail and it did not")
+	}
+}
+
+func TestIsAlive(t *testing.T) {
+	g, err := grid.New(3, 3, []conway.Coord{
+		coord.New(0, 0),
+		coord.New(1, 1),
+		coord.New(2, 2),
+	})
+	if err != nil {
+		t.Fatalf("cannot create grid: %v", err)
+	}
+	ia, err := g.IsAlive(coord.New(0, 0))
+	if err != nil {
+		t.Fatalf("error calling IsAlive: %v", err)
+	}
+	if ia == false {
+		t.Errorf("coordenate (0,0) should be alive but it is dead")
 	}
 }
