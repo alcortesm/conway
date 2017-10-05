@@ -47,6 +47,11 @@ func New(width, height uint, alives []conway.Coord) (*Grid, error) {
 	return g, nil
 }
 
+// Pos returns the index in the internal slice of a grid for the given c.
+// Cells will be located in the array by rows in ordinate increasing order:
+//  a b
+//  c d   ->  a b c d e f
+//  e f
 func (g *Grid) pos(c conway.Coord) (int, error) {
 	if c.X() >= g.Width() {
 		return 0, fmt.Errorf("abscissa value too high (%d) for grid (width = %d)",
