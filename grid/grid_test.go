@@ -3,6 +3,8 @@ package grid_test
 import (
 	"testing"
 
+	"github.com/alcortesm/conway/conway"
+	"github.com/alcortesm/conway/coord"
 	"github.com/alcortesm/conway/grid"
 )
 
@@ -44,4 +46,80 @@ func testSizeError(t *testing.T, width, height uint) {
 	if err == nil {
 		t.Errorf("new grid was supposed to fail and it did not")
 	}
+}
+
+func TestIsAlive(t *testing.T) {
+	for _, tt := range []struct {
+		name   string
+		w, h   uint
+		alives []conway.Coord
+	}{
+		{"empty", 3, 3, nil},
+		{"full", 3, 3, []conway.Coord{
+			coord.New(0, 0),
+			coord.New(0, 1),
+			coord.New(0, 2),
+			coord.New(1, 0),
+			coord.New(1, 1),
+			coord.New(1, 2),
+			coord.New(2, 0),
+			coord.New(2, 1),
+			coord.New(2, 2),
+		}},
+		{"diagonal", 3, 3, []conway.Coord{
+			coord.New(0, 0),
+			coord.New(1, 1),
+			coord.New(2, 2),
+		}},
+		{"non-diagonal", 3, 3, []conway.Coord{
+			coord.New(0, 1),
+			coord.New(0, 2),
+			coord.New(1, 0),
+			coord.New(1, 2),
+			coord.New(2, 0),
+			coord.New(2, 1),
+		}},
+		{"big", 20, 20, []conway.Coord{
+			coord.New(0, 0),
+			coord.New(7, 17),
+			coord.New(17, 6),
+			coord.New(19, 19),
+		}},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			testIsAlive(t, tt.w, tt.h, tt.alives)
+		})
+	}
+}
+
+func testIsAlive(t *testing.T, w, h uint, alives []conway.Coord) {
+	g, err := grid.New(w, h, alives)
+	if err != nil {
+		t.Fatalf("cannot create grid: %v", err)
+	}
+	var x uint
+	var y uint
+	for x = 0; x < w; x++ {
+		for y = 0; y < h; y++ {
+			c := coord.New(x, y)
+			expected := contains(alives, c)
+			ia, err := g.IsAlive(c)
+			if err != nil {
+				t.Errorf("error calling IsAlive: %v", err)
+			}
+			if ia != expected {
+				t.Errorf("wrong IsAlive output: (%d, %d) was %v, should be %v",
+					c.X(), c.Y(), ia, expected)
+			}
+		}
+	}
+}
+
+func contains(list []conway.Coord, c conway.Coord) bool {
+	for _, e := range list {
+		if conway.CoordEqual(e, c) {
+			return true
+		}
+	}
+	return false
 }

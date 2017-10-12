@@ -77,8 +77,12 @@ func (g *Grid) Height() uint {
 }
 
 // IsAlive returns if the cell at coordinates c is alive.  Returns
-// an error if x or y are out of bounds.
+// an error if c is out of bounds.
 // Implements conway.Grid.
 func (g *Grid) IsAlive(c conway.Coord) (bool, error) {
-	return false, fmt.Errorf("TODO")
+	p, err := g.pos(c)
+	if err != nil {
+		return false, err
+	}
+	return g.cells[p], nil
 }
