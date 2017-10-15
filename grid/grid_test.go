@@ -1,6 +1,7 @@
 package grid_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/alcortesm/conway/conway"
@@ -122,4 +123,80 @@ func contains(list []conway.Coord, c conway.Coord) bool {
 		}
 	}
 	return false
+}
+
+const alivePercent uint = 20
+
+func BenchmarkSizeSmall(b *testing.B) {
+	var side uint = 10
+	alives, err := someAlives(side, alivePercent)
+	if err != nil {
+		b.Fatalf("cannot create random alives: %v", err)
+	}
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		benchmarkSize(b, side, alives)
+	}
+}
+
+func someAlives(side, percent uint) ([]conway.Coord, error) {
+	if percent > 100 {
+		return nil, fmt.Errorf("percent must be <= 100, was %d", percent)
+	}
+	n := side * side * percent / 100
+	alives := make([]conway.Coord, 0, n)
+	var x, y, cont uint
+loops:
+	for x = 0; x < side; x++ {
+		for y = 0; y < side; y++ {
+			if cont == n {
+				break loops
+			}
+			alives = append(alives, coord.New(x, y))
+			cont++
+		}
+	}
+	return alives, nil
+}
+
+func benchmarkSize(b *testing.B, side uint, alives []conway.Coord) {
+	g, err := grid.New(side, side, alives)
+	if err != nil {
+		b.Fatalf("cannot create grid: %v", err)
+	}
+	var x, y uint
+	for x = 0; x < side; x++ {
+		for y = 0; y < side; y++ {
+			ia, err := g.IsAlive(coord.New(x, y))
+			if err != nil {
+				b.Fatalf("checking if (%d, %d) is alive: %v",
+					x, y, err)
+			}
+			_ = ia
+		}
+	}
+}
+
+func BenchmarkSizeMedium(b *testing.B) {
+	var side uint = 100
+	alives, err := someAlives(side, alivePercent)
+	if err != nil {
+		b.Fatalf("cannot create random alives: %v", err)
+	}
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		benchmarkSize(b, side, alives)
+	}
+}
+
+func BenchmarkSizeBig(b *testing.B) {
+	var side uint = 1000
+	alives, err := someAlives(side, alivePercent)
+	if err != nil {
+		b.Fatalf("cannot create random alives: %v", err)
+	}
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		benchmarkSize(b, side, alives)
+	}
 }
