@@ -160,7 +160,7 @@ func percentOf(p, total uint) uint {
 func randomSubSlice(n uint, all []conway.Coord) []conway.Coord {
 	ret := make([]conway.Coord, n)
 	randomIndexes := rand.Perm(len(all))
-	for i, v := range randomIndexes[0:n] {
+	for i, v := range randomIndexes[:n] {
 		ret[i] = all[v]
 	}
 	return ret
