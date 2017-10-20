@@ -1,6 +1,8 @@
 package grid_test
 
 import (
+	"fmt"
+	"math/rand"
 	"testing"
 
 	"github.com/alcortesm/conway/conway"
@@ -122,4 +124,60 @@ func contains(list []conway.Coord, c conway.Coord) bool {
 		}
 	}
 	return false
+}
+
+func BenchmarkSize(b *testing.B) {
+	for _, side := range []uint{300, 600, 900, 1200, 1500, 1800, 2100, 2400, 2700} {
+		name := fmt.Sprintf("side=%d", side)
+		all := allCoords(side)
+		nAlives := percentOf(20, side*side)
+		b.Run(name, func(b *testing.B) {
+			for n := 0; n < b.N; n++ {
+				b.StopTimer()
+				alives := randomSubSlice(nAlives, all)
+				b.StartTimer()
+				createGridAndCheckAllCells(b, side, alives)
+			}
+		})
+	}
+}
+
+func allCoords(side uint) []conway.Coord {
+	all := make([]conway.Coord, 0, side*side)
+	var x, y uint
+	for x = 0; x < side; x++ {
+		for y = 0; y < side; y++ {
+			all = append(all, coord.New(x, y))
+		}
+	}
+	return all
+}
+
+func percentOf(p, total uint) uint {
+	return total * p / 100
+}
+
+func randomSubSlice(n uint, all []conway.Coord) []conway.Coord {
+	ret := make([]conway.Coord, n)
+	randomIndexes := rand.Perm(len(all))
+	for i, v := range randomIndexes[:n] {
+		ret[i] = all[v]
+	}
+	return ret
+}
+
+func createGridAndCheckAllCells(b *testing.B, side uint, alives []conway.Coord) {
+	g, err := grid.New(side, side, alives)
+	if err != nil {
+		b.Fatalf("cannot create grid: %v", err)
+	}
+	var x, y uint
+	for x = 0; x < side; x++ {
+		for y = 0; y < side; y++ {
+			if _, err := g.IsAlive(coord.New(x, y)); err != nil {
+				b.Fatalf("checking if (%d, %d) is alive: %v",
+					x, y, err)
+			}
+		}
+	}
 }
