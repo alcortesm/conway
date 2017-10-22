@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"github.com/alcortesm/conway/conway"
+)
 
 const (
 	ticks  = 15
@@ -9,17 +11,14 @@ const (
 )
 
 func main() {
-	fmt.Println("TODO")
-	/*
-		var u Universe
-		var a Animator
+	var u conway.Universe
+	var a conway.Animator
 
-		for i := 0; i < ticks; i++ {
-			s := u.pic()
-			a.add(s)
-			u.tick()
-		}
+	for i := 0; i < ticks; i++ {
+		grid := u.Status()
+		a.Add(grid)
+		u.Tick()
+	}
 
-		a.animate("conway.gif")
-	*/
+	a.Animate("conway.gif")
 }
