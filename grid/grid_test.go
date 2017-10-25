@@ -50,6 +50,42 @@ func testSizeError(t *testing.T, width, height uint) {
 	}
 }
 
+func TestNewErrorWithAliveOutOfBounds(t *testing.T) {
+	for _, tt := range []struct {
+		name   string
+		w, h   uint
+		alives []conway.Coord // some of them will be out of bounds
+	}{
+		{"x out of bounds", 3, 3, []conway.Coord{
+			coord.New(3, 1), // out of bounds
+		}},
+		{"y out of bounds", 3, 3, []conway.Coord{
+			coord.New(1, 3), // out of bounds
+		}},
+		{"both out of bounds", 3, 3, []conway.Coord{
+			coord.New(3, 3), // out of bounds
+		}},
+		{"all out of bounds", 3, 3, []conway.Coord{
+			coord.New(1, 3), // out of bounds
+			coord.New(3, 1), // out of bounds
+			coord.New(3, 3), // out of bounds
+		}},
+		{"some out of bounds", 3, 3, []conway.Coord{
+			coord.New(0, 0),
+			coord.New(3, 1), // out of bounds
+			coord.New(1, 2),
+			coord.New(14, 2), // out of bounds
+		}},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := grid.New(tt.w, tt.h, tt.alives)
+			if err == nil {
+				t.Errorf("new grid was supposed to fail but didn't")
+			}
+		})
+	}
+}
+
 func TestIsAlive(t *testing.T) {
 	for _, tt := range []struct {
 		name   string
