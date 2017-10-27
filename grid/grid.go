@@ -53,15 +53,21 @@ func New(width, height uint, alives []conway.Coord) (*Grid, error) {
 //  c d   ->  a b c d e f
 //  e f
 func (g *Grid) pos(c conway.Coord) (int, error) {
-	if c.X() >= g.Width() {
-		return 0, fmt.Errorf("abscissa value too high (%d) for grid (width = %d)",
-			c.X(), g.Width())
+	return int(c.Y()*g.Width() + c.X()), g.checkBounds(c)
+}
+
+func (g *Grid) checkBounds(c conway.Coord) error {
+	x, y := c.X(), c.Y()
+	w, h := g.Width(), g.Height()
+	if x >= w {
+		return fmt.Errorf("abscissa value too high (%d) for grid (width = %d)",
+			x, w)
 	}
-	if c.Y() >= g.Height() {
-		return 0, fmt.Errorf("ordinate value too high (%d) for grid (height = %d)",
-			c.Y(), g.Height())
+	if y >= h {
+		return fmt.Errorf("ordinate value too high (%d) for grid (height = %d)",
+			y, h)
 	}
-	return int(c.Y()*g.Width() + c.X()), nil
+	return nil
 }
 
 // Width returns the width of the universe (number of cells).
