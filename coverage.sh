@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e -x
+set -u -e -x -o pipefail
 echo "" > coverage.txt
 for d in $(go list ./...); do
     go test -race -coverprofile=profile.out -covermode=atomic $d
