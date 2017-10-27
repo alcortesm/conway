@@ -38,21 +38,21 @@ func New(width, height uint, alives []conway.Coord) (*Grid, error) {
 		cells:  make([]bool, width*height),
 	}
 	for i, c := range alives {
-		p, err := g.pos(c)
+		p, err := g.index(c)
 		if err != nil {
-			return nil, fmt.Errorf("alive #%d out of bounds: %v", i, err)
+			return nil, fmt.Errorf("alive #%d: %v", i, err)
 		}
 		g.cells[p] = true
 	}
 	return g, nil
 }
 
-// Pos returns the index in the internal slice of a grid for the given c.
+// Index returns the index in the internal slice of a grid for the given c.
 // Cells will be located in the array by rows in ordinate increasing order:
 //  a b
 //  c d   ->  a b c d e f
 //  e f
-func (g *Grid) pos(c conway.Coord) (int, error) {
+func (g *Grid) index(c conway.Coord) (int, error) {
 	return int(c.Y()*g.Width() + c.X()), g.checkBounds(c)
 }
 
@@ -86,9 +86,9 @@ func (g *Grid) Height() uint {
 // an error if c is out of bounds.
 // Implements conway.Grid.
 func (g *Grid) IsAlive(c conway.Coord) (bool, error) {
-	p, err := g.pos(c)
+	i, err := g.index(c)
 	if err != nil {
 		return false, err
 	}
-	return g.cells[p], nil
+	return g.cells[i], nil
 }
