@@ -8,9 +8,9 @@ import (
 )
 
 func TestTestCoordOK(t *testing.T) {
-	tt := new(testing.T) // undocumented ctor of testing.T
-	conway.TestCoord(tt, coord.New(4, 7), 4, 7)
-	if tt.Failed() {
+	mockT := new(testing.T) // undocumented ctor of testing.T
+	conway.TestCoord(mockT, coord.New(4, 7), 4, 7)
+	if mockT.Failed() {
 		t.Error()
 	}
 }
@@ -26,9 +26,9 @@ func TestTestCoordFail(t *testing.T) {
 		{"both wrong", coord.New(4, 7), 0, 0},
 	} {
 		t.Run(tt.name, func(t *testing.T) {
-			mockedT := new(testing.T) // undocumented ctor of testing.T
-			conway.TestCoord(mockedT, tt.c, tt.x, tt.y)
-			if !mockedT.Failed() {
+			mockT := new(testing.T) // undocumented ctor of testing.T
+			conway.TestCoord(mockT, tt.c, tt.x, tt.y)
+			if !mockT.Failed() {
 				t.Error()
 			}
 		})
