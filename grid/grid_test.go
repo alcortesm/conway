@@ -162,6 +162,20 @@ func contains(list []conway.Coord, c conway.Coord) bool {
 	return false
 }
 
+func TestIsAliveOutOfBounds(t *testing.T) {
+	g, err := grid.New(4, 4, []conway.Coord{
+		coord.New(1, 0),
+		coord.New(2, 1),
+		coord.New(0, 2),
+	})
+	if err != nil {
+		t.Fatalf("cannot create grid: %v", err)
+	}
+	if _, err = g.IsAlive(coord.New(7, 7)); err == nil {
+		t.Error()
+	}
+}
+
 func BenchmarkSize(b *testing.B) {
 	for _, side := range []uint{300, 600, 900, 1200, 1500, 1800, 2100, 2400, 2700} {
 		name := fmt.Sprintf("side=%d", side)
