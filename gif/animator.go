@@ -38,7 +38,7 @@ func (a *Animator) Encode(w io.Writer) error {
 
 func (a *Animator) gif() *gif.GIF {
 	return &gif.GIF{
-		Image:     []*image.Paletted{createRedImage(), createWhiteImage()}, // TODO
+		Image:     a.images(),
 		Delay:     a.delay(),
 		LoopCount: 0,
 		Disposal:  nil,
@@ -49,6 +49,22 @@ func (a *Animator) gif() *gif.GIF {
 		},
 		BackgroundIndex: 0,
 	}
+}
+
+func (a *Animator) images() []*image.Paletted {
+	ret := make([]*image.Paletted, a.howManyGrids)
+	for i := range ret {
+		if i%2 == 0 {
+			ret[i] = createWhiteImage()
+		} else {
+			ret[i] = createRedImage()
+		}
+	}
+	return ret
+}
+
+func gridToImage(g conway.Grid) *image.Paletted {
+	return createRedImage() // TODO
 }
 
 func (a *Animator) delay() []int {
