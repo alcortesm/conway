@@ -16,7 +16,7 @@ type Universe interface {
 // Animator represents a collection of grids that can be rendered in a graphical format
 // and stored in a file.
 type Animator interface {
-	// Add adds a grid to the collection be used as a photogram in the animate method.
+	// Add adds a grid to the collection to be used as a photogram in the animate method.
 	Add(Grid)
 	// Encode creates an animation of all the added photograms and store it in
 	// the given writer.

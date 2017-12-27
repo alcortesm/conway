@@ -11,9 +11,10 @@ import (
 
 // Animator represents a collection of grids that will be rendered as a GIF.
 // Implements the conway.Animator interface.
+// The zero value of this type is not safe, use the function NewAnimator below.
 type Animator struct {
-	howManyGrids       int
 	delayBetweenFrames int // 100ths of second
+	addedGrids         []conway.Grid
 }
 
 // NewAnimator returns a new Animator with the given delay between frames
@@ -24,10 +25,10 @@ func NewAnimator(d int) *Animator {
 	}
 }
 
-// Add adds a grid to the collection be used as a photogram in the animate method.
+// Add adds a grid to the collection to be used as a photogram in the animate method.
 // Implements conway.Animator.
 func (a *Animator) Add(g conway.Grid) {
-	a.howManyGrids++
+	a.addedGrids = append(a.addedGrids, g)
 }
 
 // Encode creates an animation of all the added photograms and store it in
@@ -51,8 +52,9 @@ func (a *Animator) gif() *gif.GIF {
 	}
 }
 
+// Images returs an array with the added grids turned into images.
 func (a *Animator) images() []*image.Paletted {
-	ret := make([]*image.Paletted, a.howManyGrids)
+	ret := make([]*image.Paletted, len(a.addedGrids))
 	for i := range ret {
 		if i%2 == 0 {
 			ret[i] = createWhiteImage()
@@ -68,7 +70,7 @@ func gridToImage(g conway.Grid) *image.Paletted {
 }
 
 func (a *Animator) delay() []int {
-	ret := make([]int, a.howManyGrids)
+	ret := make([]int, len(a.addedGrids))
 	for i := range ret {
 		ret[i] = a.delayBetweenFrames
 	}
