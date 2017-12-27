@@ -1,6 +1,7 @@
 package gif
 
 import (
+	"fmt"
 	"image"
 	"image/color"
 	"image/gif"
@@ -16,15 +17,20 @@ import (
 type Animator struct {
 	delayBetweenFrames int // 100ths of second
 	addedGrids         []conway.Grid
+	resolution         int // pixels per cell
 	// TODO add the colors to use in the animation
 }
 
 // NewAnimator returns a new Animator with the given delay between frames
 // in 100ths of seconds.
-func NewAnimator(d int) *Animator {
-	return &Animator{
-		delayBetweenFrames: d,
+func NewAnimator(d int, r int) (*Animator, error) {
+	if r < 1 {
+		return nil, fmt.Errorf("resolution has to be > 1, got %d", r)
 	}
+	return &Animator{
+		delayBetweenFrames: d, // TODO add error checking here
+		resolution:         r,
+	}, nil
 }
 
 // Add adds a grid to the collection to be used as a photogram in the animate method.
@@ -37,6 +43,9 @@ func (a *Animator) Add(g conway.Grid) {
 // Encode creates an animation of all the added photograms and store it in
 // the given writer.
 func (a *Animator) Encode(w io.Writer) error {
+	if len(a.addedGrids) == 0 {
+		return fmt.Errorf("Add some grids first")
+	}
 	return gif.EncodeAll(w, a.gif())
 }
 
@@ -48,8 +57,8 @@ func (a *Animator) gif() *gif.GIF {
 		Disposal:  nil,
 		Config: image.Config{
 			ColorModel: nil,
-			Width:      100,
-			Height:     100,
+			Width:      int(a.addedGrids[0].Width()) * a.resolution,
+			Height:     int(a.addedGrids[0].Height()) * a.resolution,
 		},
 		BackgroundIndex: 0,
 	}
@@ -59,15 +68,15 @@ func (a *Animator) gif() *gif.GIF {
 func (a *Animator) images() []*image.Paletted {
 	ret := make([]*image.Paletted, len(a.addedGrids))
 	for i := range ret {
-		ret[i] = gridToImage(a.addedGrids[i])
+		ret[i] = a.gridToImage(a.addedGrids[i])
 	}
 	return ret
 }
 
 // GridToImage transforms a grid into an image.
-func gridToImage(g conway.Grid) *image.Paletted {
-	width := int(g.Width())
-	height := int(g.Height())
+func (a *Animator) gridToImage(g conway.Grid) *image.Paletted {
+	width := int(g.Width()) * a.resolution
+	height := int(g.Height()) * a.resolution
 	r := image.Rectangle{
 		Min: image.Point{
 			X: 0,
@@ -97,8 +106,8 @@ func gridToImage(g conway.Grid) *image.Paletted {
 	const black = 1
 	for c := 0; c < width; c++ {
 		for r := 0; r < height; r++ {
-			where := coord.New(uint(c), uint(r))
-			isAlive, err := g.IsAlive(where)
+			cell := coord.New(uint(c/a.resolution), uint(r/a.resolution))
+			isAlive, err := g.IsAlive(cell)
 			if err != nil {
 				panic(err)
 			}
