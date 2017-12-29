@@ -17,7 +17,7 @@ type Universe interface {
 // and stored in a file.
 type Animator interface {
 	// Add adds a grid to the collection to be used as a photogram in the animate method.
-	Add(Grid)
+	Add(Grid) error
 	// Encode creates an animation of all the added photograms and store it in
 	// the given writer.
 	Encode(w io.Writer) error

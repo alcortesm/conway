@@ -21,23 +21,34 @@ type Animator struct {
 	// TODO add the colors to use in the animation
 }
 
-// NewAnimator returns a new Animator with the given delay between frames
-// in 100ths of seconds.
+// NewAnimator returns a new Animator with the given delay d between frames
+// in 100ths of seconds and the given resolution r in pixels per cell.
 func NewAnimator(d int, r int) (*Animator, error) {
+	if d < 1 {
+		return nil, fmt.Errorf("delay has to be > 0, got %d", d)
+	}
 	if r < 1 {
-		return nil, fmt.Errorf("resolution has to be > 1, got %d", r)
+		return nil, fmt.Errorf("resolution has to be > 0, got %d", r)
 	}
 	return &Animator{
-		delayBetweenFrames: d, // TODO add error checking here
+		delayBetweenFrames: d,
 		resolution:         r,
 	}, nil
 }
 
 // Add adds a grid to the collection to be used as a photogram in the animate method.
 // Implements conway.Animator.
-func (a *Animator) Add(g conway.Grid) {
-	// TODO add errors for incompatible grids.
+func (a *Animator) Add(g conway.Grid) error {
+	if len(a.addedGrids) > 0 {
+		first := a.addedGrids[0]
+		if g.Width() != first.Width() || g.Height() != first.Height() {
+			return fmt.Errorf(
+				"unexpected size, expected (%d, %d), got (%d, %d)",
+				first.Width(), first.Height(), g.Width(), g.Height())
+		}
+	}
 	a.addedGrids = append(a.addedGrids, g)
+	return nil
 }
 
 // Encode creates an animation of all the added photograms and store it in
@@ -50,6 +61,9 @@ func (a *Animator) Encode(w io.Writer) error {
 }
 
 func (a *Animator) gif() *gif.GIF {
+	first := a.addedGrids[0]
+	widthPixels := int(first.Width()) * a.resolution
+	heightPixels := int(first.Height()) * a.resolution
 	return &gif.GIF{
 		Image:     a.images(),
 		Delay:     a.delay(),
@@ -57,8 +71,8 @@ func (a *Animator) gif() *gif.GIF {
 		Disposal:  nil,
 		Config: image.Config{
 			ColorModel: nil,
-			Width:      int(a.addedGrids[0].Width()) * a.resolution,
-			Height:     int(a.addedGrids[0].Height()) * a.resolution,
+			Width:      widthPixels,
+			Height:     heightPixels,
 		},
 		BackgroundIndex: 0,
 	}
@@ -109,7 +123,7 @@ func (a *Animator) gridToImage(g conway.Grid) *image.Paletted {
 			cell := coord.New(uint(c/a.resolution), uint(r/a.resolution))
 			isAlive, err := g.IsAlive(cell)
 			if err != nil {
-				panic(err)
+				panic(err) // unreachable
 			}
 			if isAlive {
 				i.Pix[r*width+c] = black
