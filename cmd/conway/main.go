@@ -1,6 +1,9 @@
 package main
 
 import (
+	"log"
+	"os"
+
 	"github.com/alcortesm/conway/conway"
 )
 
@@ -20,5 +23,12 @@ func main() {
 		u.Tick()
 	}
 
-	a.Animate("conway.gif")
+	f, err := os.Create("conway.gif")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+	if err := a.Encode(f); err != nil {
+		log.Fatal(err)
+	}
 }

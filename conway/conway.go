@@ -3,6 +3,8 @@ Package conway defines interfaces to generate animations of the Conway's game of
 */
 package conway
 
+import "io"
+
 // Universe is a collection of cells that evolves over time.
 type Universe interface {
 	// Status returns the current status of the universe as a grid.
@@ -14,11 +16,11 @@ type Universe interface {
 // Animator represents a collection of grids that can be rendered in a graphical format
 // and stored in a file.
 type Animator interface {
-	// Add adds a grid to the collection be used as a photogram in the animate method.
-	Add(Grid)
-	// Animate creates an animation of all the added photograms and store it in
-	// the given file.
-	Animate(file string)
+	// Add adds a grid to the collection to be used as a photogram in the animate method.
+	Add(Grid) error
+	// Encode creates an animation of all the added photograms and store it in
+	// the given writer.
+	Encode(w io.Writer) error
 }
 
 // Grid represents an inmutable snapshot of a universe.
