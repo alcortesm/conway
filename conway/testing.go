@@ -6,7 +6,7 @@ import (
 
 // TestCoord is a test helper that checks if the coordinate c has x and y
 // as its components.
-func TestCoord(t *testing.T, c Coord, x, y uint) {
+func TestCoord(t *testing.T, c Coord, x, y int) {
 	t.Helper()
 	if x != c.X() {
 		t.Errorf("wrong x value: expected %d, got %d", x, c.X())

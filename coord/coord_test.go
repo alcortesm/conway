@@ -10,7 +10,7 @@ import (
 
 func Test(t *testing.T) {
 	for _, f := range []struct {
-		x, y uint
+		x, y int
 	}{
 		{x: 0, y: 0},
 		{x: 0, y: 1},

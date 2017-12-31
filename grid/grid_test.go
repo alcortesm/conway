@@ -21,7 +21,7 @@ func TestSizeOK(t *testing.T) {
 	testSizeOK(t, 10000, 20000)
 }
 
-func testSizeOK(t *testing.T, width, height uint) {
+func testSizeOK(t *testing.T, width, height int) {
 	t.Helper()
 	g, err := grid.New(width, height, nil)
 	if err != nil {
@@ -42,7 +42,7 @@ func TestSizeError(t *testing.T) {
 	testSizeError(t, 0, 0)
 }
 
-func testSizeError(t *testing.T, width, height uint) {
+func testSizeError(t *testing.T, width, height int) {
 	t.Helper()
 	_, err := grid.New(width, height, nil)
 	if err == nil {
@@ -53,7 +53,7 @@ func testSizeError(t *testing.T, width, height uint) {
 func TestNewErrorWithAliveOutOfBounds(t *testing.T) {
 	for _, tt := range []struct {
 		name   string
-		w, h   uint
+		w, h   int
 		alives []conway.Coord // some of them will be out of bounds
 	}{
 		{"x out of bounds", 3, 3, []conway.Coord{
@@ -89,7 +89,7 @@ func TestNewErrorWithAliveOutOfBounds(t *testing.T) {
 func TestIsAlive(t *testing.T) {
 	for _, tt := range []struct {
 		name   string
-		w, h   uint
+		w, h   int
 		alives []conway.Coord
 	}{
 		{"empty", 3, 3, nil},
@@ -130,13 +130,13 @@ func TestIsAlive(t *testing.T) {
 	}
 }
 
-func testIsAlive(t *testing.T, w, h uint, alives []conway.Coord) {
+func testIsAlive(t *testing.T, w, h int, alives []conway.Coord) {
 	g, err := grid.New(w, h, alives)
 	if err != nil {
 		t.Fatalf("cannot create grid: %v", err)
 	}
-	var x uint
-	var y uint
+	var x int
+	var y int
 	for x = 0; x < w; x++ {
 		for y = 0; y < h; y++ {
 			c := coord.New(x, y)
@@ -177,7 +177,7 @@ func TestIsAliveOutOfBounds(t *testing.T) {
 }
 
 func BenchmarkSize(b *testing.B) {
-	for _, side := range []uint{300, 600, 900, 1200, 1500, 1800, 2100, 2400, 2700} {
+	for _, side := range []int{300, 600, 900, 1200, 1500, 1800, 2100, 2400, 2700} {
 		name := fmt.Sprintf("side=%d", side)
 		all := allCoords(side)
 		nAlives := percentOf(20, side*side)
@@ -192,9 +192,9 @@ func BenchmarkSize(b *testing.B) {
 	}
 }
 
-func allCoords(side uint) []conway.Coord {
+func allCoords(side int) []conway.Coord {
 	all := make([]conway.Coord, 0, side*side)
-	var x, y uint
+	var x, y int
 	for x = 0; x < side; x++ {
 		for y = 0; y < side; y++ {
 			all = append(all, coord.New(x, y))
@@ -203,11 +203,11 @@ func allCoords(side uint) []conway.Coord {
 	return all
 }
 
-func percentOf(p, total uint) uint {
+func percentOf(p, total int) int {
 	return total * p / 100
 }
 
-func randomSubSlice(n uint, all []conway.Coord) []conway.Coord {
+func randomSubSlice(n int, all []conway.Coord) []conway.Coord {
 	ret := make([]conway.Coord, n)
 	randomIndexes := rand.Perm(len(all))
 	for i, v := range randomIndexes[:n] {
@@ -216,12 +216,12 @@ func randomSubSlice(n uint, all []conway.Coord) []conway.Coord {
 	return ret
 }
 
-func createGridAndCheckAllCells(b *testing.B, side uint, alives []conway.Coord) {
+func createGridAndCheckAllCells(b *testing.B, side int, alives []conway.Coord) {
 	g, err := grid.New(side, side, alives)
 	if err != nil {
 		b.Fatalf("cannot create grid: %v", err)
 	}
-	var x, y uint
+	var x, y int
 	for x = 0; x < side; x++ {
 		for y = 0; y < side; y++ {
 			if _, err := g.IsAlive(coord.New(x, y)); err != nil {
