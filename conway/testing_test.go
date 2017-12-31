@@ -19,7 +19,7 @@ func TestTestCoordFail(t *testing.T) {
 	for _, tt := range []struct {
 		name string
 		c    conway.Coord
-		x, y uint
+		x, y int
 	}{
 		{"wrong x", coord.New(4, 7), 0, 7},
 		{"wrong y", coord.New(4, 7), 4, 0},

@@ -58,7 +58,7 @@ func TestAddFailsIfGridsHaveDifferentSizes(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	width, height, alives := uint(5), uint(7), []conway.Coord{}
+	width, height, alives := 5, 7, []conway.Coord{}
 	g, err := grid.New(width, height, alives)
 	if err != nil {
 		t.Fatal(err)
@@ -131,7 +131,7 @@ func TestEncode(t *testing.T) {
 	}
 }
 
-func newEmptyGrid(t *testing.T, w, h uint) conway.Grid {
+func newEmptyGrid(t *testing.T, w, h int) conway.Grid {
 	t.Helper()
 	g, err := grid.New(w, h, []conway.Coord{})
 	if err != nil {
@@ -140,11 +140,11 @@ func newEmptyGrid(t *testing.T, w, h uint) conway.Grid {
 	return g
 }
 
-func newFullGrid(t *testing.T, w, h uint) conway.Grid {
+func newFullGrid(t *testing.T, w, h int) conway.Grid {
 	t.Helper()
 	alives := []conway.Coord{}
-	for c := uint(0); c < w; c++ {
-		for r := uint(0); r < h; r++ {
+	for c := 0; c < w; c++ {
+		for r := 0; r < h; r++ {
 			alives = append(alives, coord.New(c, r))
 		}
 	}
@@ -155,12 +155,12 @@ func newFullGrid(t *testing.T, w, h uint) conway.Grid {
 	return g
 }
 
-func newHalfGrid(t *testing.T, w, h uint) conway.Grid {
+func newHalfGrid(t *testing.T, w, h int) conway.Grid {
 	t.Helper()
 	alives := []conway.Coord{}
 	lastWasAlive := false
-	for c := uint(0); c < w; c++ {
-		for r := uint(0); r < h; r++ {
+	for c := 0; c < w; c++ {
+		for r := 0; r < h; r++ {
 			if lastWasAlive {
 				lastWasAlive = false
 				continue
@@ -215,10 +215,10 @@ func checkDelay(t *testing.T, g *gif.GIF, length, value int) {
 	}
 }
 
-func checkConfig(t *testing.T, g *gif.GIF, w, h uint, r int) {
+func checkConfig(t *testing.T, g *gif.GIF, w, h, r int) {
 	t.Helper()
-	widthPixels := int(w) * r
-	heightPixels := int(h) * r
+	widthPixels := w * r
+	heightPixels := h * r
 	if g.Config.Width != widthPixels {
 		t.Errorf("wrong width, want %d, got %d", widthPixels, g.Config.Width)
 	}
@@ -263,8 +263,8 @@ func checkImage(t *testing.T, g *gif.GIF, resolution int, grids []conway.Grid) {
 		},
 	}
 
-	widthPixels := int(grids[0].Width()) * resolution
-	heightPixels := int(grids[0].Height()) * resolution
+	widthPixels := grids[0].Width() * resolution
+	heightPixels := grids[0].Height() * resolution
 	for i, frame := range g.Image {
 		if frame.Stride != widthPixels {
 			t.Errorf("wrong Stride in frame #%d: want %d, got %d", i, widthPixels, frame.Stride)
@@ -277,7 +277,7 @@ func checkImage(t *testing.T, g *gif.GIF, resolution int, grids []conway.Grid) {
 		}
 		for c := 0; c < widthPixels; c++ {
 			for r := 0; r < heightPixels; r++ {
-				cell := coord.New(uint(c/resolution), uint(r/resolution))
+				cell := coord.New(c/resolution, r/resolution)
 				alive, err := grids[i].IsAlive(cell)
 				if err != nil {
 					t.Fatalf("cannot check if (%d, %d) is alive in frame #%d: %v",

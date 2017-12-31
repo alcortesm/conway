@@ -12,7 +12,9 @@ import (
 )
 
 // Animator represents a collection of grids that will be rendered as a GIF.
-// Implements the conway.Animator interface.
+// Implements the conway.Animator interface.  The origin of coordinates is
+// set at the upper left corner and cells with negatives coordinates are
+// ignored.
 // The zero value of this type is not safe, use the function NewAnimator below.
 type Animator struct {
 	delayBetweenFrames int // 100ths of second
@@ -62,8 +64,8 @@ func (a *Animator) Encode(w io.Writer) error {
 
 func (a *Animator) gif() *gif.GIF {
 	first := a.addedGrids[0]
-	widthPixels := int(first.Width()) * a.resolution
-	heightPixels := int(first.Height()) * a.resolution
+	widthPixels := first.Width() * a.resolution
+	heightPixels := first.Height() * a.resolution
 	return &gif.GIF{
 		Image:     a.images(),
 		Delay:     a.delay(),
@@ -89,8 +91,8 @@ func (a *Animator) images() []*image.Paletted {
 
 // GridToImage transforms a grid into an image.
 func (a *Animator) gridToImage(g conway.Grid) *image.Paletted {
-	width := int(g.Width()) * a.resolution
-	height := int(g.Height()) * a.resolution
+	width := g.Width() * a.resolution
+	height := g.Height() * a.resolution
 	r := image.Rectangle{
 		Min: image.Point{
 			X: 0,
@@ -120,7 +122,7 @@ func (a *Animator) gridToImage(g conway.Grid) *image.Paletted {
 	const black = 1
 	for c := 0; c < width; c++ {
 		for r := 0; r < height; r++ {
-			cell := coord.New(uint(c/a.resolution), uint(r/a.resolution))
+			cell := coord.New(c/a.resolution, r/a.resolution)
 			isAlive, err := g.IsAlive(cell)
 			if err != nil {
 				panic(err) // unreachable

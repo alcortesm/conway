@@ -26,9 +26,9 @@ type Animator interface {
 // Grid represents an inmutable snapshot of a universe.
 type Grid interface {
 	// Width returns the width of the universe (number of cells).
-	Width() uint
+	Width() int
 	// Height returns the height of the universe (number of cells).
-	Height() uint
+	Height() int
 	// IsAlive returns if the cell at coordinates x, y is alive.
 	// Returns an error if x or y are out of bounds.
 	IsAlive(Coord) (bool, error)
@@ -37,9 +37,9 @@ type Grid interface {
 // Coord represents the position of a cell in a grid.
 type Coord interface {
 	// X returns the cell's abscissa.
-	X() uint
+	X() int
 	// Y returns the cell's ordinate.
-	Y() uint
+	Y() int
 }
 
 // CoordEqual returns if two coordinates refer to the same cell.
