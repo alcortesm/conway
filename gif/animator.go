@@ -12,7 +12,9 @@ import (
 )
 
 // Animator represents a collection of grids that will be rendered as a GIF.
-// Implements the conway.Animator interface.
+// Implements the conway.Animator interface.  The origin of coordinates is
+// set at the upper left corner and cells with negatives coordinates are
+// ignored.
 // The zero value of this type is not safe, use the function NewAnimator below.
 type Animator struct {
 	delayBetweenFrames int // 100ths of second

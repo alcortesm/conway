@@ -21,6 +21,7 @@ const (
 
 // New creates a new grid with the given width and height (number of cells)
 // and the given list of alive cells.
+// The grid has its origin of coordinates at the upper left corner.
 // Returns an error if the width or the height is smaller than 3 or if any
 // of the alive cells are out of bounds.
 func New(width, height int, alives []conway.Coord) (*Grid, error) {
@@ -59,12 +60,12 @@ func (g *Grid) index(c conway.Coord) (int, error) {
 func (g *Grid) checkBounds(c conway.Coord) error {
 	x, y := c.X(), c.Y()
 	w, h := g.Width(), g.Height()
-	if x >= w {
-		return fmt.Errorf("abscissa value too high (%d) for grid (width = %d)",
+	if x < 0 || x >= w {
+		return fmt.Errorf("invalid abscissa value (%d) for grid (width = %d)",
 			x, w)
 	}
-	if y >= h {
-		return fmt.Errorf("ordinate value too high (%d) for grid (height = %d)",
+	if y < 0 || y >= h {
+		return fmt.Errorf("invalid ordinate value (%d) for grid (height = %d)",
 			y, h)
 	}
 	return nil

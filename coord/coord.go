@@ -6,8 +6,7 @@ type Coord struct {
 }
 
 // New creates a new coord, representing a cell in a grid in the given
-// position.  Positions are represented as cartesian coordinates, where
-// the origin is at the upper left of the grid.
+// position.  Positions are represented as cartesian coordinates.
 func New(x, y int) *Coord {
 	return &Coord{x: x, y: y}
 }

@@ -40,6 +40,9 @@ func TestSizeError(t *testing.T) {
 	testSizeError(t, 3, 2)
 	testSizeError(t, 2, 2)
 	testSizeError(t, 0, 0)
+	testSizeError(t, -1, 3)
+	testSizeError(t, 3, -1)
+	testSizeError(t, -1, -1)
 }
 
 func testSizeError(t *testing.T, width, height int) {
@@ -75,6 +78,15 @@ func TestNewErrorWithAliveOutOfBounds(t *testing.T) {
 			coord.New(3, 1), // out of bounds
 			coord.New(1, 2),
 			coord.New(14, 2), // out of bounds
+		}},
+		{"negative x", 3, 3, []conway.Coord{
+			coord.New(-1, 1), // out of bounds
+		}},
+		{"negative y", 3, 3, []conway.Coord{
+			coord.New(1, -1), // out of bounds
+		}},
+		{"both negative", 3, 3, []conway.Coord{
+			coord.New(-1, -1), // out of bounds
 		}},
 	} {
 		t.Run(tt.name, func(t *testing.T) {
@@ -135,10 +147,8 @@ func testIsAlive(t *testing.T, w, h int, alives []conway.Coord) {
 	if err != nil {
 		t.Fatalf("cannot create grid: %v", err)
 	}
-	var x int
-	var y int
-	for x = 0; x < w; x++ {
-		for y = 0; y < h; y++ {
+	for x := 0; x < w; x++ {
+		for y := 0; y < h; y++ {
 			c := coord.New(x, y)
 			expected := contains(alives, c)
 			ia, err := g.IsAlive(c)
@@ -194,9 +204,8 @@ func BenchmarkSize(b *testing.B) {
 
 func allCoords(side int) []conway.Coord {
 	all := make([]conway.Coord, 0, side*side)
-	var x, y int
-	for x = 0; x < side; x++ {
-		for y = 0; y < side; y++ {
+	for x := 0; x < side; x++ {
+		for y := 0; y < side; y++ {
 			all = append(all, coord.New(x, y))
 		}
 	}
@@ -221,9 +230,8 @@ func createGridAndCheckAllCells(b *testing.B, side int, alives []conway.Coord) {
 	if err != nil {
 		b.Fatalf("cannot create grid: %v", err)
 	}
-	var x, y int
-	for x = 0; x < side; x++ {
-		for y = 0; y < side; y++ {
+	for x := 0; x < side; x++ {
+		for y := 0; y < side; y++ {
 			if _, err := g.IsAlive(coord.New(x, y)); err != nil {
 				b.Fatalf("checking if (%d, %d) is alive: %v",
 					x, y, err)
