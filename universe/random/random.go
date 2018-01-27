@@ -8,21 +8,36 @@ import (
 )
 
 // Random is a Conway universe that starts with random alives.
-type Random struct{}
+type Random struct {
+	width  int
+	height int
+	status conway.Grid
+}
 
 // New returns a new Random universe.
-func New() *Random {
-	return &Random{}
+func New(w, h, n int) (*Random, error) {
+	if w < grid.MinWidth {
+		return nil, fmt.Errorf("width < %d, was %d", grid.MinWidth, w)
+	}
+	if h < grid.MinHeight {
+		return nil, fmt.Errorf("height < %d, was %d", grid.MinHeight, h)
+	}
+	if n < 0 {
+		return nil, fmt.Errorf("number of initial alives must be > 0, was %d", n)
+	}
+	return &Random{
+		width:  w,
+		height: h,
+		status: grid.NewRandom(w, h, n),
+	}, nil
 }
 
 // Status implements conway.Universe.
 func (r *Random) Status() conway.Grid {
-	g, err := grid.New(5, 10, []conway.Coord{})
-	if err != nil {
-		panic(fmt.Sprintf("cannot create grid: %v", err))
-	}
-	return g
+	return r.status
 }
 
 // Tick implements conway.Universe.
-func (r *Random) Tick() {}
+func (r *Random) Tick() {
+	r.status = conway.Evolve(r.status)
+}

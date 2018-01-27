@@ -14,8 +14,9 @@ const (
 	ticks      = 15
 	width      = 10
 	height     = 10
-	delay      = 100 // 100ths of seconds
-	resolution = 100 // side size of the cell in pixels
+	nAlives    = width * height / 2
+	delay      = 50 // 100ths of seconds
+	resolution = 30 // side size of the cell in pixels
 )
 
 func main() {
@@ -23,10 +24,14 @@ func main() {
 	var a conway.Animator
 	var err error
 
-	u = random.New()
+	u, err = random.New(width, height, nAlives)
+	if err != nil {
+		log.Fatal("cannot create random universe: ", err)
+	}
+
 	a, err = gif.NewAnimator(delay, resolution)
 	if err != nil {
-		log.Fatal("creating gif animator:", err)
+		log.Fatal("creating gif animator: ", err)
 	}
 
 	for i := 0; i < ticks; i++ {
