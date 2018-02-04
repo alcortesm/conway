@@ -3,7 +3,9 @@ Package conway defines interfaces to generate animations of the Conway's game of
 */
 package conway
 
-import "io"
+import (
+	"io"
+)
 
 // Universe is a collection of cells that evolves over time.
 type Universe interface {
@@ -45,4 +47,9 @@ type Coord interface {
 // CoordEqual returns if two coordinates refer to the same cell.
 func CoordEqual(a, b Coord) bool {
 	return a.X() == b.X() && a.Y() == b.Y()
+}
+
+// TODO
+func Evolve(old Grid) Grid {
+	return old
 }

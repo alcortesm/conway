@@ -11,14 +11,14 @@ import (
 )
 
 func TestSizeOK(t *testing.T) {
-	testSizeOK(t, 3, 3)
-	testSizeOK(t, 3, 4)
-	testSizeOK(t, 4, 3)
-	testSizeOK(t, 4, 4)
-	testSizeOK(t, 10, 10)
-	testSizeOK(t, 20, 10)
-	testSizeOK(t, 10, 20)
-	testSizeOK(t, 10000, 20000)
+	testSizeOK(t, grid.MinWidth, grid.MinHeight)
+	testSizeOK(t, grid.MinWidth, grid.MinHeight+1)
+	testSizeOK(t, grid.MinWidth+1, grid.MinHeight)
+	testSizeOK(t, grid.MinWidth+1, grid.MinHeight+1)
+	testSizeOK(t, grid.MinWidth+100, grid.MinHeight+200)
+	testSizeOK(t, grid.MinWidth+200, grid.MinHeight+100)
+	testSizeOK(t, grid.MinWidth+200, grid.MinHeight+200)
+	testSizeOK(t, grid.MinWidth+20000, grid.MinHeight+20000)
 }
 
 func testSizeOK(t *testing.T, width, height int) {
@@ -36,12 +36,12 @@ func testSizeOK(t *testing.T, width, height int) {
 }
 
 func TestSizeError(t *testing.T) {
-	testSizeError(t, 2, 3)
-	testSizeError(t, 3, 2)
-	testSizeError(t, 2, 2)
+	testSizeError(t, grid.MinWidth-1, grid.MinHeight)
+	testSizeError(t, grid.MinWidth, grid.MinHeight-1)
+	testSizeError(t, grid.MinWidth-1, grid.MinHeight-1)
 	testSizeError(t, 0, 0)
-	testSizeError(t, -1, 3)
-	testSizeError(t, 3, -1)
+	testSizeError(t, -1, grid.MinHeight)
+	testSizeError(t, grid.MinWidth, -1)
 	testSizeError(t, -1, -1)
 }
 

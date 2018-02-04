@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/alcortesm/conway/conway"
+	"github.com/alcortesm/conway/coord"
 )
 
 // Grid represents a snapshot of a universe.
@@ -15,23 +16,25 @@ type Grid struct {
 }
 
 const (
-	minWidth  = 3
-	minHeight = 3
+	// MinWidth is the minimum width for a grid.
+	MinWidth = 3
+	// MinHeight is the minimum height for a grid.
+	MinHeight = 3
 )
 
 // New creates a new grid with the given width and height (number of cells)
 // and the given list of alive cells.
 // The grid has its origin of coordinates at the upper left corner.
-// Returns an error if the width or the height is smaller than 3 or if any
-// of the alive cells are out of bounds.
+// Returns an error if the width or the height are smaller than MinWidth and
+// MinHeight or if any of the alive cells are out of bounds.
 func New(width, height int, alives []conway.Coord) (*Grid, error) {
-	if width < minWidth {
+	if width < MinWidth {
 		return nil, fmt.Errorf("width must be >= than %d, was %d",
-			minWidth, width)
+			MinWidth, width)
 	}
-	if height < minHeight {
+	if height < MinHeight {
 		return nil, fmt.Errorf("height must be >= than %d, was %d",
-			minHeight, height)
+			MinHeight, height)
 	}
 	g := &Grid{
 		width:  width,
@@ -46,6 +49,19 @@ func New(width, height int, alives []conway.Coord) (*Grid, error) {
 		g.cells[p] = true
 	}
 	return g, nil
+}
+
+// NewRandom returns a grid with n random alive cells inside a grid with the given dimensions.
+func NewRandom(w, h, n int) *Grid {
+	alives := make([]conway.Coord, n)
+	for i := 0; i < n; i++ {
+		alives[i] = coord.NewRandom(w, h)
+	}
+	g, err := New(w, h, alives)
+	if err != nil {
+		panic(fmt.Sprintf("cannot create grid: %v", err))
+	}
+	return g
 }
 
 // Index returns the index in the internal slice of a grid for the given c.
