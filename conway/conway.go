@@ -5,6 +5,8 @@ package conway
 
 import (
 	"io"
+
+	"github.com/alcortesm/conway/coord"
 )
 
 // Universe is a collection of cells that evolves over time.
@@ -49,7 +51,29 @@ func CoordEqual(a, b Coord) bool {
 	return a.X() == b.X() && a.Y() == b.Y()
 }
 
-// TODO
-func Evolve(old Grid) []Coord {
-	return []Coord{}
+// Evolve returns the alive cells of a grid in its next tick.
+func Evolve(old Grid) ([]Coord, error) {
+	ret := []Coord{}
+	for x := 0; x < old.Width(); x++ {
+		for y := 0; y < old.Height(); y++ {
+			current := coord.New(x, y)
+			a, err := old.IsAlive(current)
+			if err != nil {
+				return nil, err
+			}
+			c := countNeighbours(old, x, y)
+			if laws(a, c) {
+				ret = append(ret, current)
+			}
+		}
+	}
+	return ret, nil
+}
+
+func countNeighbours(g Grid, x, y int) int {
+	return 0
+}
+
+func laws(alive bool, neighbours int) bool {
+	return false
 }
