@@ -38,6 +38,12 @@ func (r *Random) Status() conway.Grid {
 }
 
 // Tick implements conway.Universe.
-func (r *Random) Tick() {
-	r.status = conway.Evolve(r.status)
+func (r *Random) Tick() error {
+	alives := conway.Evolve(r.status)
+	var err error
+	r.status, err = grid.New(r.status.Width(), r.status.Height(), alives)
+	if err != nil {
+		return err
+	}
+	return nil
 }
