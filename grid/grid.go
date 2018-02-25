@@ -2,6 +2,8 @@ package grid
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
 
 	"github.com/alcortesm/conway/conway"
 	"github.com/alcortesm/conway/coord"
@@ -54,6 +56,7 @@ func New(width, height int, alives []conway.Coord) (*Grid, error) {
 // NewRandom returns a grid with n random alive cells inside a grid with the given dimensions.
 func NewRandom(w, h, n int) *Grid {
 	alives := make([]conway.Coord, n)
+	rand.Seed(time.Now().UTC().UnixNano())
 	for i := 0; i < n; i++ {
 		alives[i] = coord.NewRandom(w, h)
 	}

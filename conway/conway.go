@@ -12,7 +12,7 @@ type Universe interface {
 	// Status returns the current status of the universe as a grid.
 	Status() Grid
 	// Tick makes the universe evolve a single round (a tick).
-	Tick()
+	Tick() error
 }
 
 // Animator represents a collection of grids that can be rendered in a graphical format
@@ -47,9 +47,4 @@ type Coord interface {
 // CoordEqual returns if two coordinates refer to the same cell.
 func CoordEqual(a, b Coord) bool {
 	return a.X() == b.X() && a.Y() == b.Y()
-}
-
-// TODO
-func Evolve(old Grid) Grid {
-	return old
 }
