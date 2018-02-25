@@ -11,12 +11,12 @@ import (
 )
 
 const (
-	ticks      = 15
-	width      = 10
-	height     = 10
-	nAlives    = width * height / 2
-	delay      = 50 // 100ths of seconds
-	resolution = 30 // side size of the cell in pixels
+	ticks      = 500
+	width      = 60
+	height     = 60
+	nAlives    = width * height / 10
+	delay      = 10 // 100ths of seconds
+	resolution = 10 // side size of the cell in pixels
 )
 
 func main() {

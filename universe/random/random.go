@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/alcortesm/conway/conway"
+	"github.com/alcortesm/conway/evolve"
 	"github.com/alcortesm/conway/grid"
 )
 
@@ -39,7 +40,7 @@ func (r *Random) Status() conway.Grid {
 
 // Tick implements conway.Universe.
 func (r *Random) Tick() error {
-	alives, err := conway.Evolve(r.status)
+	alives, err := evolve.Evolve(r.status)
 	if err != nil {
 		return err
 	}
