@@ -26,5 +26,11 @@ func countNeighbours(g Grid, x, y int) int {
 }
 
 func laws(alive bool, neighbours int) bool {
+	if alive && neighbours == 2 {
+		return true
+	}
+	if neighbours == 3 {
+		return true
+	}
 	return false
 }
