@@ -7,3 +7,23 @@
 # Conway
 
 A gif generator for the Conway game of life.
+
+## Instalation
+
+```
+; go get github.com/alcortesm/conway
+```
+
+## Example of use
+
+```
+; conway
+```
+
+Each run of the command generates a random initial universe.
+Here is an example of an output gif from one of my runs:
+![Example run output](https://user-images.githubusercontent.com/9169414/36646548-4ac65af8-1a79-11e8-811d-da84549f7af3.gif)
+
+
+
+
